@@ -18,6 +18,18 @@ router.post('/register', async (req, res) => {
 })
 
 
-router.post('/login')
+router.post('/login', async (req, res) => {
+    const { username, password } = req.body
+    const user = await UserModel.findOne({ username })
+
+    if(!user) return res.json({ message: 'No such user'})
+
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+    if(!isPasswordValid) return res.json({ message: 'Username or Password Incorrect' })
+
+    const token = jwt.sign({ id: user._id }, 'secret') //create login token. use .env variable instead of "secret"
+    res.json({ token, userID: user._id })
+
+})
 
 export { router as userRouter }
