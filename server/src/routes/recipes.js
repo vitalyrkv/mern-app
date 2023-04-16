@@ -36,10 +36,10 @@ router.put('/', async (req, res) => {
     }
 })
 
-router.get('/savedRecipes/ids', async (req, res) => { //getting id from saved recipes for th user logged in 
+router.get('/savedRecipes/ids/:userID', async (req, res) => { //getting id from saved recipes for th user logged in 
     try{
-        const user = await UserModel.findById(req.body.userID) 
-        res.json({savedRecipes: user?.savedRecipes}) //send recipes to front end, ? if not signed in 
+        const user = await UserModel.findById(req.params.userID) 
+        res.json({savedRecipes: user?.savedRecipes})
     }catch(error) {
         res.json(error)
     }
@@ -51,7 +51,7 @@ router.get('/savedRecipes', async (req, res) => {
         const savedRecipes = await RecipeModel.find({
             _id: {$in: user.savedRecipes}
         })
-        res.json({savedRecipes}) //send recipes to front end, ? if not signed in 
+        res.json({savedRecipes})
     }catch(error) {
         res.json(error)
     }
